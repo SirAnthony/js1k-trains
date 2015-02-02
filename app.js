@@ -12,9 +12,10 @@ function City(idx){
 	}
     }
 }
-function Joint(points){
+function Joint(points, start){
     return {
         p: points,
+        c: start,
 	T: function(z){
 	    c.beginPath();
             for (var p=0; p<points.length; p=p+2){
@@ -26,31 +27,28 @@ function Joint(points){
     }
 }
 
-function close(x, y, p, ammount){
-    return p.x<(x+ammount)&&p.x>(x-ammount) &&
-        p.y<(y+ammount)&&p.y>(y-ammount);
+function close(dx, dy, am){
+    return Math.abs(dx)<am && Math.abs(dy)<am;
 }
 
 function Train(dst, source, num){
     var destination = cities[dst];
     var cjoint = source[dst];
-    var pidx = 0, speed = 0.1;
-    var dirx = 0, diry = 0;
+    var pidx = 0, speed = 0.05;
     var x = source.x, y = source.y;
     var obj = {
         x: source.x,
         y: source.y,
         T: function(z){
             c.fillStyle = colors[dst];
-            c.fillRect(obj.x, obj.y, 6, 6);
-            obj.x += dirx * z * speed;
-            obj.y += diry * z * speed;
-            if (close(x, y, obj, 10)){
+            c.fillRect(obj.x, obj.y-3, 6, 6);
+            var dx = x - obj.x, dy = y - obj.y;
+            var angle = Math.atan2(dy, dx);
+            obj.x += speed * z * Math.cos(angle);
+            obj.y += speed * z * Math.sin(angle);
+            if (close(dx, dy, 2)){
                 pidx += 2;
                 x = cjoint.p[pidx], y = cjoint.p[pidx+1];
-                var dx = x - obj.x, dy = y - obj.y;
-                var dist = Math.sqrt(x*x+y*y);
-                dirx = dx/dist, diry = dy/dist;
             }
             obj.next&&obj.next.T(z);
             if (pidx>=cjoint.p.length)
@@ -67,22 +65,22 @@ var joints = [];
 for (i=1; i<5; i++){
     cities.push(City(i))
 }
-var new_joint = [], ss = 0;
 function to_city(x, y){
     for (var c=0; c<cities.length; c++){
         var ci = cities[c];
-        if (close(x, y, ci, 20))
+        if (close(x-ci.x, y-ci.y, 10))
             return ci;
     }
     return 0;
 }
 var trains = [];
+var new_joint = [], ss = 0;
 a.onclick = function(e){
     var ci = to_city(e.pageX, e.pageY);
     if (ci||new_joint.length){
         new_joint.push(e.pageX, e.pageY);
-        if (ci&&new_joint.length>2){
-            var J = Joint(new_joint);
+        if (ci&&ci!=ss&&new_joint.length>2){
+            var J = Joint(new_joint, ss);
             joints.push(J);
             ci[ss.idx] = J;
             ss[ci.idx] = J;
