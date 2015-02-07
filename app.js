@@ -34,9 +34,12 @@ function close(dx, dy, am){
 function Train(dst, source, num){
     var destination = cities[dst];
     var cjoint = source[dst];
-    var pidx = 0, speed = 0.05;
-    var x = source.x, y = source.y;
+    var pidx = source==cjoint.c ? 0 : cjoint.p.length;
+    var pidd = source==cjoint.c ? 1 : -1;
+    var speed = 0.05;
+    var x = source.x + pidd*num*4, y = source.y+pidd*num*4;
     var obj = {
+        j: cjoint,
         x: source.x,
         y: source.y,
         T: function(z){
@@ -47,11 +50,10 @@ function Train(dst, source, num){
             obj.x += speed * z * Math.cos(angle);
             obj.y += speed * z * Math.sin(angle);
             if (close(dx, dy, 2)){
-                pidx += 2;
+                pidx += pidd*2;
                 x = cjoint.p[pidx], y = cjoint.p[pidx+1];
             }
-            obj.next&&obj.next.T(z);
-            if (pidx>=cjoint.p.length)
+            if (pidx<0||pidx>=cjoint.p.length)
                 trains.splice(trains.indexOf(obj), 1);
         }
     }
@@ -92,16 +94,16 @@ a.onclick = function(e){
 function Update(){
     if (cities.length*2<trains.length)
         return;
+    if (TimePassed % Math.random() < 0.8 / joints.length)
+        return;
     var count = Math.ceil(Math.random()*100%8);
     var dst = Math.ceil(Math.random()*100%cities.length);
     var src = Math.ceil(Math.random()*100%cities.length);
     var source = cities[src-1];
     if (!source[dst])
         return;
-    var t = Train(dst, source, 0);
-    trains.push(t);
     for (var i=0; i<count; i++)
-        t.next = Train(dst, source, i+1);
+        trains.push(Train(dst, source, i));
 }
 var TimePassed = 0;
 (function L(){
