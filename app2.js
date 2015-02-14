@@ -49,14 +49,15 @@ function jointed(j1, j2){
         (j1.x==j2.x && j1.y!=j2.y && j1.t&2 && j2.t&2);
 }
 var dirs = [-2, 1, 2, -1];
-function Train(dst, src){
+function Train(dst, src, num){
     var speed = 0.05;
     var x = CW*(0.5+src.x), y = CH*(0.5+src.y);
-    var dir = 1;
+    var dir = 1, lz=Array(9);
     return {
         x: x, y: y,
         j: get_joint(src.x, src.y),
         score: 100,
+        next: num && Train(dst, src, num-1),
         P: function(jx, jy){
             dir = (dir+3)%4, i=0;
             for (i=0;i<4&&!this.N(jx, jy);i++)
@@ -68,6 +69,7 @@ function Train(dst, src){
             return j && jointed(this.j, j) && (this.j = j);
         },
         T: function(z){
+            z=z||0;
             c.fillStyle = get_color(dst.idx);
             c.fillRect(this.x, this.y, 6, 6);
             var dx = x - this.x, dy = y - this.y;
@@ -78,11 +80,13 @@ function Train(dst, src){
                 this.P(this.j.x, this.j.y);
                 x = CW*(0.5+this.j.x), y = CH*(0.5+this.j.y);
             }
-            if (close(dst.cx-x, dst.cy-y, CM/4)){
+            if (trains.indexOf(this)>=0 && close(dst.cx-this.x, dst.cy-this.y, 15)){
                 Score(dst.cx, dst.cy, this.score);
                 trains.splice(trains.indexOf(this), 1);
             }
             this.score -= z/1000;
+            this.next && this.next.T(lz.shift());
+            lz.push(z);
         }
     }
 }
@@ -97,6 +101,7 @@ function Score(x, y, idx){
         }
     }
     GlobalScore+=~~idx;
+    tc++;
     scores.push(s);
 }
 
@@ -118,13 +123,13 @@ function Update(){
         return;
     var dst = cities[Math.floor(Math.random()*100%cities.length)];
     var src = cities[Math.floor(Math.random()*100%cities.length)];
-    if (!joints[src.x*ceils+src.y].t)
+    if (dst==src||!joints[src.x*ceils+src.y].t)
         return;
-    trains.push(Train(dst, src, i));
+    trains.push(Train(dst, src, Math.floor(Math.random()*100%cities.length)+1));
 }
 
 var TimePassed = 0, LastTick = Date.now();
-var GlobalScore = 0;
+var GlobalScore = 0, tc = 0;
 setInterval(function(){ GlobalScore-=100+TimePassed/a.width }, 10000);
 setInterval(function(){ scores = [] }, 1000);
 setInterval(function(){ cities.length<15 && cities.push(City(cities.length+1)) }, 40000);
@@ -141,8 +146,12 @@ setInterval(function(){ cities.length<15 && cities.push(City(cities.length+1)) }
     var p = function(o){ o.T(D) }
     cities.forEach(p);
     joints.forEach(p);
-    trains.forEach(p);
-    scores.forEach(p);
+    if (Math.abs(GlobalScore/10000)<1){
+        trains.forEach(p);
+        scores.forEach(p);
+    } else
+        c.fillText((GlobalScore/10000<0?'Good':'Bad')+' end: '+tc, a.width/2.5, a.height/2);
     c.fillStyle = 'white';
+    c.fillText(tc, a.width, 20);
     c.fillText(~~GlobalScore, 0, 20);
 })()
