@@ -36,7 +36,8 @@ T=function(x,y,z){
     var s={}
     var D=x, S=y, C=Array(9), F=D.F,
         j=O[10*S.x+S.y], f=1e2, n=j.t,
-        e=z&&T(D,S,z-1), U=X=W*(S.x+.5), V=Y=H*(S.y+.5),
+        e=z&&T(D,S,z-1), U=W*(S.x+.5), V=H*(S.y+.5),
+        X=U, Y=V,
     N=function(x,y,z){
         var g = Math.abs(K[n]),
         f = O[10*(x+(g&1)*K[n]/g)+(y+(g&2)*K[n]/g/2)];
@@ -57,7 +58,7 @@ T=function(x,y,z){
         2>Math.abs(X-U) && 2>Math.abs(Y-V) &&
             (P(j.x,j.y), X=W*(j.x+.5), Y=H*(j.y+.5));
         0<=R.indexOf(s) && 15>Math.abs(D.X-U) && 15>Math.abs(D.Y-V) &&
-            (A+=~~f,B++, x.splice(x.indexOf(s), 1));
+            (A+=~~f,B++, R.splice(R.indexOf(s), 1));
         f-=x/1E3
         e&&e.T(C.shift())
         C.push(x)
