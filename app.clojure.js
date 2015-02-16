@@ -30,8 +30,8 @@ T=function(x,y,z){
         e=z&&T(D,S,z-1), U=S.X, V=S.Y,
         X=U, Y=V,
     N=function(x,y,z){
-        var g = Math.abs(K[n]),
-        f = O[10*(x+(g&1)*K[n]/g)+(y+(g&2)*K[n]/g/2)];
+        var t = Math.abs(K[n]),
+        f = O[10*(x+(t&1)*K[n]/t)+(y+(t&2)*K[n]/t/2)];
         return f && (f.y==j.y && f.x!=j.x && f.t&j.t&1 ||
              (f.x==j.x && f.y!=j.y && f.t&j.t&2)) && (j=f);
     },
