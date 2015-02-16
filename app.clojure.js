@@ -16,15 +16,9 @@ J=function(x,y,z){
     var s = {}
     s.t=z,s.x=x,s.y=y,
     s.T=function(x,y,z){
-        s.t&&(c.beginPath(),
-        s.t&1 && (
-            c.moveTo(W*(s.x), H*(s.y+.5)),
-            c.lineTo(W*(s.x+1), H*(s.y+.5))
-        ),
-        s.t&2 && (
-            c.moveTo(W*(s.x+.5), H*(s.y)),
-            c.lineTo(W*(s.x+.5), H*(s.y+1))
-        ), c.stroke());
+        c.fillStyle='#000';
+        s.t&1 && c.fillRect(W*(s.x), H*(s.y+.5), W, 1)
+        s.t&2 && c.fillRect(W*(s.x+.5), H*(s.y), 1, H)
     }
     return s
 }
@@ -92,13 +86,13 @@ c.font = "35px Sans";
             T(d,b,Math.floor(1e2*Math.random()%I.length)+1));
     }
     c.clearRect(0, 0, a.width, a.height)
-    c.fillStyle = "green"
+    c.fillStyle = "#080"
     c.fillRect(0, 0, a.width, a.height)
     c.fill()
     I.forEach(U)
     O.forEach(U)
     R.forEach(U)
-    c.fillStyle = "white";
+    c.fillStyle = "#FFF";
     1<Math.abs(A/1e4)&&c.fillText("Trains: "+B, a.width/2.5, a.height/2);
     c.fillText(B, a.width, 35);
     c.fillText(~~A, 0, 35);
