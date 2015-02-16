@@ -77,7 +77,7 @@ a.onclick=function(x,y,z){
     j.t = (n+1)%4;
 };
 var V, F=Date.now(), E=0, A=0, B=0;
-setInterval(function(x,y,z){ A-=100+E/a.width;}, 1e4);
+setInterval(function(x,y,z){ 1<Math.abs(A/1E4) || (A-=100+E/a.width) }, 1e4);
 setInterval(function(x,y,z){ 15>I.length&&I.push(C(I.length+1)) }, 4e4);
 U=function(x,y,z){ x.T(V) };
 (G=function(x,y,z){
@@ -85,7 +85,7 @@ U=function(x,y,z){ x.T(V) };
     V = Date.now() - F
     E += V
     F += V
-    if (!(2*I.length<R.length || .8>E%Math.random())){
+    if (1>Math.abs(A/1E4) && !(2*I.length<R.length || .8>E%Math.random())){
         var d = I[Math.floor(1e2*Math.random()%I.length)],
             b = I[Math.floor(1e2*Math.random()%I.length)];
         d!=b&&O[10*b.x+b.y].t && R.push(
