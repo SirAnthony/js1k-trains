@@ -2,16 +2,13 @@ var W = a.width/10, H = a.height/10;
 l=function(x,y,z){
     return "hsl("+360/I.length*x+",70%,50%)"; }
 C=function(x,y,z){
-    var s = {}, F = s.F = x;
-    s.x=Math.floor(10*Math.random()),
-    s.y=Math.floor(10*Math.random()),
-    s.X=W*(s.x+.5),
-    s.Y=H*(s.y+.5),
+    var s = {}, F = s.F = z;
+    s.j=O[10*x+y],
+    s.X=W*(x+.5),
+    s.Y=H*(y+.5),
     s.T=function(x,y,z){
         c.fillStyle=l(F);
-        c.font = "35px Sans";
         c.fillText("⌂", s.X, s.Y);
-        c.font = "20px Sans";
     }
     return s;
 }
@@ -35,8 +32,8 @@ var K = [-2,1,2,-1];
 T=function(x,y,z){
     var s={}
     var D=x, S=y, C=Array(9), F=D.F,
-        j=O[10*S.x+S.y], f=1e2, n=j.t,
-        e=z&&T(D,S,z-1), U=W*(S.x+.5), V=H*(S.y+.5),
+        j=S.j, f=1e2, n=j.t,
+        e=z&&T(D,S,z-1), U=S.X, V=S.Y,
         X=U, Y=V,
     N=function(x,y,z){
         var g = Math.abs(K[n]),
@@ -58,8 +55,8 @@ T=function(x,y,z){
         2>Math.abs(X-U) && 2>Math.abs(Y-V) &&
             (P(j.x,j.y), X=W*(j.x+.5), Y=H*(j.y+.5));
         0<=R.indexOf(s) && 15>Math.abs(D.X-U) && 15>Math.abs(D.Y-V) &&
-            (A+=~~f,B++, R.splice(R.indexOf(s), 1));
-        f-=x/1E3
+            (A+=f,B++, R.splice(R.indexOf(s), 1));
+        f-=x/1e3
         e&&e.T(C.shift())
         C.push(x)
     }
@@ -68,27 +65,30 @@ T=function(x,y,z){
 
 // cIties, tRains, jOints
 var I=[], R=[], O=[];
-for(i=0;i<4;i++)
-    I.push(C(i+1));
 for(i=0;i<100;i++)
     O[i]=J(i/10|0,i%10|0,0);
+for(i=0;i<4;i++)
+    I.push(C(Math.floor(10*Math.random()), Math.floor(10*Math.random()), i+1));
 a.onclick=function(x,y,z){
     var j = O[10*Math.floor(x.pageX/W)+Math.floor(x.pageY/H)], n=j.t;
     j.t = (n+1)%4;
 };
 var V, F=Date.now(), E=0, A=0, B=0;
-setInterval(function(x,y,z){ 1<Math.abs(A/1E4) || (A-=100+E/a.width) }, 1e4);
-setInterval(function(x,y,z){ 15>I.length&&I.push(C(I.length+1)) }, 4e4);
+setInterval(function(x,y,z){ 1<Math.abs(A/1e4) || (A-=100+E/a.width) }, 1e4);
+setInterval(function(x,y,z){
+    15>I.length&&I.push(
+        C(Math.floor(10*Math.random()), Math.floor(10*Math.random()), I.length+1)) }, 4e4);
 U=function(x,y,z){ x.T(V) };
+c.font = "35px Sans";
 (G=function(x,y,z){
     requestAnimationFrame(G)
     V = Date.now() - F
     E += V
     F += V
-    if (1>Math.abs(A/1E4) && !(2*I.length<R.length || .8>E%Math.random())){
+    if (1>Math.abs(A/1e4) && !(2*I.length<R.length || .8>E%Math.random())){
         var d = I[Math.floor(1e2*Math.random()%I.length)],
             b = I[Math.floor(1e2*Math.random()%I.length)];
-        d!=b&&O[10*b.x+b.y].t && R.push(
+        d!=b&&b.j.t && R.push(
             T(d,b,Math.floor(1e2*Math.random()%I.length)+1));
     }
     c.clearRect(0, 0, a.width, a.height)
@@ -99,7 +99,7 @@ U=function(x,y,z){ x.T(V) };
     O.forEach(U)
     R.forEach(U)
     c.fillStyle = "white";
-    1<Math.abs(A/1E4)&&c.fillText("Trains: "+B, a.width/2.5, a.height/2);
-    c.fillText(B, a.width, 20);
-    c.fillText(~~A, 0, 20);
+    1<Math.abs(A/1e4)&&c.fillText("Trains: "+B, a.width/2.5, a.height/2);
+    c.fillText(B, a.width, 35);
+    c.fillText(~~A, 0, 35);
 })();
