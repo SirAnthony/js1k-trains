@@ -30,10 +30,10 @@ T=function(x,y,z){
         e=z&&T(D,S,z-1), U=S.X, V=S.Y,
         X=U, Y=V,
     N=function(x,y,z){
-        var t = Math.abs(K[n]),
+        var t = K[n]*K[n]/2,
         f = O[10*(x+(t&1)*K[n]/t)+(y+(t&2)*K[n]/t/2)];
-        return f && (f.y==j.y && f.x!=j.x && f.t&j.t&1 ||
-             (f.x==j.x && f.y!=j.y && f.t&j.t&2)) && (j=f);
+        return f && (f.x!=x && f.t&j.t&1 ||
+             (f.y!=y && f.t&j.t&2)) && (j=f);
     },
     P=function(x,y,z){
         n=(n+3)%4;
@@ -46,9 +46,9 @@ T=function(x,y,z){
         t=Math.atan2(Y-V,X-U);
         U+=.05*(x|0)*Math.cos(t);
         V+=.05*(x|0)*Math.sin(t);
-        2>Math.abs(X-U) && 2>Math.abs(Y-V) &&
+        4>((X-U)*(X-U)+(Y-V)*(Y-V)) &&
             (P(j.x,j.y), X=W*(j.x+.5), Y=H*(j.y+.5));
-        0<=R.indexOf(s) && 15>Math.abs(D.X-U) && 15>Math.abs(D.Y-V) &&
+        0<=R.indexOf(s) && 30>((D.X-U)*(D.X-U)+(D.Y-V)*(D.Y-V)) &&
             (A+=f,B++, R.splice(R.indexOf(s), 1));
         f-=x/1e3
         e&&e.T(C.shift())
@@ -64,11 +64,11 @@ for(i=0;i<100;i++)
 for(i=0;i<4;i++)
     I.push(C(Math.floor(10*Math.random()), Math.floor(10*Math.random()), i+1));
 a.onclick=function(x,y,z){
-    var j = O[10*Math.floor(x.pageX/W)+Math.floor(x.pageY/H)], n=j.t;
-    j.t = (n+1)%4;
+    var j = O[10*Math.floor(x.pageX/W)+Math.floor(x.pageY/H)]
+    j.t = (j.t+1)%4;
 };
 var V, F=Date.now(), E=0, A=0, B=0;
-setInterval(function(x,y,z){ 1<Math.abs(A/1e4) || (A-=100+E/a.width) }, 1e4);
+setInterval(function(x,y,z){ 1<A*A/2e4 || (A-=100+E/a.width) }, 1e4);
 setInterval(function(x,y,z){
     15>I.length&&I.push(
         C(Math.floor(10*Math.random()), Math.floor(10*Math.random()), I.length+1)) }, 4e4);
@@ -79,7 +79,7 @@ c.font = "35px Sans";
     V = Date.now() - F
     E += V
     F += V
-    if (1>Math.abs(A/1e4) && !(2*I.length<R.length || .8>E%Math.random())){
+    if (1>A*A/2e4 && !(2*I.length<R.length || .8>E%Math.random())){
         var d = I[Math.floor(1e2*Math.random()%I.length)],
             b = I[Math.floor(1e2*Math.random()%I.length)];
         d!=b&&b.j.t && R.push(
@@ -93,7 +93,7 @@ c.font = "35px Sans";
     O.forEach(U)
     R.forEach(U)
     c.fillStyle = "#FFF";
-    1<Math.abs(A/1e4)&&c.fillText("Trains: "+B, a.width/2.5, a.height/2);
+    1<A*A/2e4&&c.fillText("Trains: "+B, a.width/2.5, a.height/2);
     c.fillText(B, a.width, 35);
     c.fillText(~~A, 0, 35);
 })();
