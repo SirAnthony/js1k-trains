@@ -12,26 +12,16 @@ C=function(x,y,z){
     }
     return s;
 }
-J=function(x,y,z){
-    var s = {}
-    s.t=z,s.x=x,s.y=y,
-    s.T=function(x,y,z){
-        c.fillStyle='#000';
-        s.t&1 && c.fillRect(W*(s.x), H*(s.y+.5), W, 1)
-        s.t&2 && c.fillRect(W*(s.x+.5), H*(s.y), 1, H)
-    }
-    return s
-}
 var K = [-2,1,2,-1];
 T=function(x,y,z){
-    var s={}
-    var D=x, S=y, C=Array(9), F=D.F,
+    var s={},
+        D=x, S=y, C=Array(9), F=D.F,
         j=S.j, f=1e2, n=j.t,
         e=z&&T(D,S,z-1), U=S.X, V=S.Y,
         X=U, Y=V,
     N=function(x,y,z){
-        var t = K[n]*K[n]/2,
-        f = O[10*(x+(t&1)*K[n]/t)+(y+(t&2)*K[n]/t/2)];
+        z = Math.abs(K[n]),
+        f = O[10*(x+(g&1)*K[n]/g)+(y+(g&2)*K[n]/g/2)];
         return f && (f.x!=x && f.t&j.t&1 ||
              (f.y!=y && f.t&j.t&2)) && (j=f);
     },
@@ -59,19 +49,24 @@ T=function(x,y,z){
 
 // cIties, tRains, jOints
 var I=[], R=[], O=[];
+// try to move J here
 for(i=0;i<100;i++)
-    O[i]=J(i/10|0,i%10|0,0);
-for(i=0;i<4;i++)
-    I.push(C(Math.floor(10*Math.random()), Math.floor(10*Math.random()), i+1));
+    O[i]={
+        x: i/10|0,
+        y: i%10|0,
+        t: 0,
+        T: function(x,y,z){
+            s=this
+            c.fillStyle='#000'
+            s.t&1 && c.fillRect(W*(s.x), H*(s.y+.5), W, 1)
+            s.t&2 && c.fillRect(W*(s.x+.5), H*(s.y), 1, H)
+        }
+    }
 a.onclick=function(x,y,z){
-    var j = O[10*Math.floor(x.pageX/W)+Math.floor(x.pageY/H)]
+    var j = O[10*(x.pageX/W|0)+x.pageY/H|0]
     j.t = (j.t+1)%4;
 };
-var V, F=Date.now(), E=0, A=0, B=0;
-setInterval(function(x,y,z){ 1<A*A/2e4 || (A-=100+E/a.width) }, 1e4);
-setInterval(function(x,y,z){
-    15>I.length&&I.push(
-        C(Math.floor(10*Math.random()), Math.floor(10*Math.random()), I.length+1)) }, 4e4);
+var V, F=Date.now(), E=0, A=0, B=0, P=1;
 U=function(x,y,z){ x.T(V) };
 c.font = "35px Sans";
 (G=function(x,y,z){
@@ -79,12 +74,16 @@ c.font = "35px Sans";
     V = Date.now() - F
     E += V
     F += V
-    if (1>A*A/2e4 && !(2*I.length<R.length || .8>E%Math.random())){
-        var d = I[Math.floor(1e2*Math.random()%I.length)],
-            b = I[Math.floor(1e2*Math.random()%I.length)];
+    if (1>Math.abs(A)/1e4 && !(2*I.length<R.length || .8>E%Math.random())){
+        var d = I[1e2*Math.random()%I.length|0],
+            b = I[1e2*Math.random()%I.length|0];
         d!=b&&b.j.t && R.push(
-            T(d,b,Math.floor(1e2*Math.random()%I.length)+1));
+            T(d,b,1e2*Math.random()%I.length|0+1));
     }
+    // -> 1 call of C -> move from func
+    if (1>Math.abs(A)/1e4 && E/4e4>(I.length-3) && I.length<15)
+        I.push(C(10*Math.random()|0, 10*Math.random()|0, I.length+1));
+    1>Math.abs(A)/1e4 && E/1e4>P && (P++, A-=100+E/a.width);
     c.clearRect(0, 0, a.width, a.height)
     c.fillStyle = "#080"
     c.fillRect(0, 0, a.width, a.height)
@@ -93,7 +92,7 @@ c.font = "35px Sans";
     O.forEach(U)
     R.forEach(U)
     c.fillStyle = "#FFF";
-    1<A*A/2e4&&c.fillText("Trains: "+B, a.width/2.5, a.height/2);
+    1<Math.abs(A)/2e4&&c.fillText("Trains: "+B, a.width/2.5, a.height/2);
     c.fillText(B, a.width, 35);
     c.fillText(~~A, 0, 35);
 })();
