@@ -1,72 +1,59 @@
-var W = a.width/10, H = a.height/10;
-l=function(x,y,z){
-    return "hsl("+360/I.length*x+",70%,50%)"; }
-C=function(x,y,z){
-    var s = {}, F = s.F = z;
-    s.j=O[10*x+y],
-    s.X=W*(x+.5),
-    s.Y=H*(y+.5),
-    s.T=function(x,y,z){
-        c.fillStyle=l(F);
-        c.fillText("⌂", s.X, s.Y);
-    }
-    return s;
-}
-var K = [-2,1,2,-1];
+W = a.width/10, H = a.height/10;
 T=function(x,y,z){
-    var s={},
-        D=x, S=y, C=Array(9), F=D.F,
-        j=S.j, f=1e2, n=j.t,
-        e=z&&T(D,S,z-1), U=S.X, V=S.Y,
+    var s={F: y.F},
+        C=Array(9), j=x,
+        U=W*(j.x+.5), V=H*(j.y+.5),
+        u=W*(y.x+.5), v=H*(y.y+.5), n=j.t,
+        e=z&&T(x,y,z-1),
         X=U, Y=V,
-    N=function(x,y,z){
-        z = Math.abs(K[n])
-        f = O[10*(x+(z&1)*K[n]/z)+(y+(z&2)*K[n]/z/2)]
-        return f && (f.x!=x && f.t&j.t&1 ||
-             (f.y!=y && f.t&j.t&2)) && (j=f)
-    },
+        n=1, s=1;
     P=function(x,y,z){
-        n=(n+3)%4
-        for(i=0;i<4&&!N(x,y,n);i++)
-            n=(n+1)%4
+        z=0;
+        do {
+            n=(n+1)%3*s;
+            s>1&&(s*=-1);
+            f = O[10*(x+(n&1)*s)+(y+(n&2)*s/2)]
+            f && f.t&j.t && (f.x!=x && f.t&1 ||
+                 (f.y!=y && f.t&2)) && (j=f, z=4)
+        } while(z++<4);
     }
     s.T=function(x,y,z){
         z = Math.abs(K[n])
-        c.fillStyle=l(F)
+        c.fillStyle="hsl("+360/I*s.F+",70%,50%)"
         c.fillRect(U,V,6,6)
         U+=.05*x*(z&1)*K[n]/z
         V+=.05*x*(z&2)*K[n]/z/2
         4>(Math.abs(X-U)+Math.abs(Y-V)) &&
             (P(j.x,j.y), X=W*(j.x+.5), Y=H*(j.y+.5));
-        s in R && 30>(Math.abs(D.X-U)+Math.abs(D.Y-V)) &&
-            (A+=f,B++, R.splice(R.indexOf(s), 1));
-        f-=x/1e3
+        s in R && 30>(Math.abs(u-U)+Math.abs(v-V)) &&
+            (A+=1e2,B++, R.splice(R.indexOf(s), 1));
         e&&e.T(C.shift()|0)
         C.push(x)
     }
     return s
 }
 
-// cIties, tRains, jOints
-var I=[], R=[], O=[];
+// tRains, jOints
+R=[], O=[];
 // try to move J here
 for(i=0;i<100;i++)
     O[i]={
         x: i/10|0,
         y: i%10|0,
-        t: 0,
+        t: 0, F: 0,
         T: function(x,y,z){
             s=this
             c.fillStyle='#000'
             s.t&1 && c.fillRect(W*(s.x), H*(s.y+.5), W, 1)
             s.t&2 && c.fillRect(W*(s.x+.5), H*(s.y), 1, H)
+            s.F && (c.fillStyle="hsl("+360/I*s.F+",70%,50%)",
+                    c.fillText("⌂", W*(s.x+.5), H*(s.y+.5)));
         }
     }
 a.onclick=function(x,y,z){
-    var j = O[10*(x.pageX/W|0)+x.pageY/H|0]
-    j.t = (j.t+1)%4;
+    O[10*(x.pageX/W|0)+x.pageY/H|0].t = (O[10*(x.pageX/W|0)+x.pageY/H|0].t+1)%4;
 };
-var V, F=Date.now(), E=0, A=0, B=0, P=1;
+V, F=Date.now(), E=0, A=0, B=0, P=1, I=0;
 U=function(x,y,z){ x.T(V) };
 c.font = "35px Sans";
 (G=function(x,y,z){
@@ -74,25 +61,22 @@ c.font = "35px Sans";
     V = Date.now() - F
     E += V
     F += V
-    if (1>Math.abs(A)/1e4 && !(2*I.length<R.length || .8>E%Math.random())){
-        var d = I[1e2*Math.random()%I.length|0],
-            b = I[1e2*Math.random()%I.length|0];
-        d!=b&&b.j.t && R.push(
-            T(d,b,1e2*Math.random()%I.length|0+1));
+    if (1>Math.abs(A)/1e4 && !(2*I<R.length || .8>E%Math.random())){
+        d = O[1e2*Math.random()|0],
+            b = O[1e2*Math.random()|0];
+        b.C && d.C && d!=b && b.t && R.push(
+            T(d,b,1e2*Math.random()%I|0+1));
     }
     // -> 1 call of C -> move from func
-    if (1>Math.abs(A)/1e4 && E/4e4>(I.length-3) && I.length<15)
-        I.push(C(10*Math.random()|0, 10*Math.random()|0, I.length+1));
+    if (1>Math.abs(A)/1e4 && E/4e4>I-3 && 10>I-3)
+        O[1e2*Math.random()|0].F = ++I;
     1>Math.abs(A)/1e4 && E/1e4>P && (P++, A-=100+E/a.width);
     c.clearRect(0, 0, a.width, a.height)
     c.fillStyle = "#080"
     c.fillRect(0, 0, a.width, a.height)
-    c.fill()
-    I.forEach(U)
     O.forEach(U)
     R.forEach(U)
     c.fillStyle = "#FFF";
     1<Math.abs(A)/1e4&&c.fillText("Trains: "+B, a.width/2.5, a.height/2);
-    c.fillText(B, a.width, 35);
     c.fillText(~~A, 0, 35);
 })();
