@@ -18,12 +18,11 @@ T=function(x,y,z){
         } while(z++<4);
     }
     s.T=function(x,y,z){
-        z = Math.abs(K[n])
         c.fillStyle="hsl("+360/I*s.F+",70%,50%)"
         c.fillRect(U,V,6,6)
-        U+=.05*x*(z&1)*K[n]/z
-        V+=.05*x*(z&2)*K[n]/z/2
-        4>(Math.abs(X-U)+Math.abs(Y-V)) &&
+        U+=.05*x*(n&1)*s
+        V+=.05*x*(n&2)*s/2
+        3>(Math.abs(X-U)+Math.abs(Y-V)) &&
             (P(j.x,j.y), X=W*(j.x+.5), Y=H*(j.y+.5));
         s in R && 30>(Math.abs(u-U)+Math.abs(v-V)) &&
             (A+=1e2,B++, R.splice(R.indexOf(s), 1));
