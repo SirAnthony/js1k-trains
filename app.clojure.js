@@ -5,7 +5,7 @@ T=function(x,y,z){
         U=W*(j.x+.5), V=H*(j.y+.5),
         e=z&&T(x,y,z-1),
         X=U, Y=V,
-        n=1, g=-1,
+        n=1, g=-1, p=z,
     P=function(x,y,z){
         n&2&&(g*=-1), n=n*2%3;
         for(i=0;i<5;i++){
@@ -19,7 +19,7 @@ T=function(x,y,z){
         c.fillRect(U,V,6,6)
         x && (3>(X-U)*(n&1)*g+(Y-V)*(n&2)*g/2 && (
             // Remove
-            R.indexOf(s)>=0 && j==J && (A++,R.splice(R.indexOf(s), 1)) ||
+            R.indexOf(s)>=0 && j==J && (A+=p,R.splice(R.indexOf(s), 1)) ||
             // Next point
             P())
         || (U+=x*(n&1)*g*W/64, V+=x*(n&2)*g/2*H/48));
@@ -33,7 +33,7 @@ R=[], O=[], C=[];
 for(i=0;i<100;i++)
     O[i]={
         x: i/10|0,
-        y: i%10|0,
+        y: i%10,
         t: 0, F: 0,
         T: function(x,y,z){
             s=this
@@ -52,9 +52,8 @@ U=function(x,y,z){ x.T(V/20) };
 c.font = "35px Sans";
 (G=function(x,y,z){
     requestAnimationFrame(G);
-    V = Date.now() - F
+    V = Date.now() - F - E;
     E += V
-    F += V
     E/1e4>R.length && 2*I>R.length &&
       (x = C[1e2*Math.random()%I|0], y = C[1e2*Math.random()%I|0],
        x!=y && x.t && R.push(T(x,y,1e2*Math.random()%I|0+1)))
