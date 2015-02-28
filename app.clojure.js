@@ -3,13 +3,13 @@ T=function(x,y,z){
     var s={F: y.F},
         C=Array(9), j=x, J=y,
         U=W*(j.x+.5), V=H*(j.y+.5),
-        n=j.t, e=z&&T(x,y,z-1),
+        e=z&&T(x,y,z-1),
         X=U, Y=V,
         n=1, g=-1,
     P=function(x,y,z){
         n&2&&(g*=-1), n=n*2%3;
         for(i=0;i<5;i++){
-            f = O[10*(x+(n&1)*g)+(y+(n&2)*g/2)];
+            f = O[10*(j.x+(n&1)*g)+(j.y+(n&2)*g/2)];
             f && f.t&j.t&n && (j=f, X=W*(j.x+.5), Y=H*(j.y+.5), i=4) ||
              (n=n*2%3, n&2&&(g*=-1));
         }
@@ -17,13 +17,13 @@ T=function(x,y,z){
     s.T=function(x,y,z){
         c.fillStyle="hsl("+360/I*s.F+",70%,50%)"
         c.fillRect(U,V,6,6)
-        x && (2>(Math.abs(X-U)+Math.abs(Y-V)) && (
+        x && (3>(X-U)*(n&1)*g+(Y-V)*(n&2)*g/2 && (
             // Remove
-            R.indexOf(s)>=0 && j==J && (A+=1e2,B++, R.splice(R.indexOf(s), 1)) ||
+            R.indexOf(s)>=0 && j==J && (A++,R.splice(R.indexOf(s), 1)) ||
             // Next point
-            P(j.x,j.y))
+            P())
         || (U+=x*(n&1)*g, V+=x*(n&2)*g/2));
-        e&&(e.T(C.shift()||0), C.push(x))
+        e&&(e.T(C.shift()||0, p), C.push(x))
     }
     return s
 }
@@ -47,27 +47,24 @@ for(i=0;i<100;i++)
 a.onclick=function(x,y,z){
     O[10*(x.pageX/W|0)+x.pageY/H|0].t = (O[10*(x.pageX/W|0)+x.pageY/H|0].t+1)%4;
 };
-V=0, F=Date.now(), E=0, A=0, B=0, P=1, I=0;
-U=function(x,y,z){ x.T(16/20) };
+F=Date.now(), V=E=A=I=0;
+U=function(x,y,z){ x.T(V/20) };
 c.font = "35px Sans";
 (G=function(x,y,z){
     requestAnimationFrame(G);
     V = Date.now() - F
     E += V
     F += V
-    if (1>Math.abs(A)/1e4 && !(2*I<R.length || .8>E%Math.random()))
-        x = C[1e2*Math.random()%I|0], y = C[1e2*Math.random()%I|0],
-        x!=y && x.t && R.push(T(x,y,1e2*Math.random()%I|0+1));
-    // -> 1 call of C -> move from func
-    if (1>Math.abs(A)/1e4 && E/4e4>I-3 && 10>I-3)
-        x=O[1e2*Math.random()|0], I = x.F = C.push(x);
-    1>Math.abs(A)/1e4 && E/1e4>P && (P++, A-=100+E/a.width);
+    E/1e4>R.length && 2*I>R.length &&
+      (x = C[1e2*Math.random()%I|0], y = C[1e2*Math.random()%I|0],
+       x!=y && x.t && R.push(T(x,y,1e2*Math.random()%I|0+1)))
+    E/4e4>I-3 && 15>I-3 &&
+        (x=O[1e2*Math.random()|0], I = x.F = C.push(x));
     c.clearRect(0, 0, a.width, a.height)
     c.fillStyle = "#080"
     c.fillRect(0, 0, a.width, a.height)
     O.forEach(U)
     R.forEach(U)
     c.fillStyle = "#FFF";
-    1<Math.abs(A)/1e4&&c.fillText("Trains: "+B, a.width/2.5, a.height/2);
-    c.fillText(~~A, 0, 35);
+    c.fillText(A, 0, 35);
 })();
