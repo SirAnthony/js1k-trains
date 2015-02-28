@@ -7,25 +7,22 @@ T=function(x,y,z){
         X=U, Y=V,
         n=1, g=-1;
     P=function(x,y,z){
-        n--;
         for(i=0;i<5;i++){
             n&2&&(g*=-1);
             n=(n+1)%3;
-            console.log(n, g);
             f = O[10*(x+(n&1)*g)+(y+(n&2)*g/2)];
-            f && n && f.t&j.t&n && (j=f, i=4)
+            f && f.t&j.t&n && (j=f, X=W*(j.x+.5), Y=H*(j.y+.5), i=4)
         }
     }
     s.T=function(x,y,z){
         c.fillStyle="hsl("+360/I*s.F+",70%,50%)"
         c.fillRect(U,V,6,6)
-        U+=.05*x*(n&1)*g
-        V+=.05*x*(n&2)*g/2
         3>(Math.abs(X-U)+Math.abs(Y-V)) && (
             // Remove
             s in R && j==J && (A+=1e2,B++, R.splice(R.indexOf(s), 1)) ||
             // Next point
-            (P(j.x,j.y), X=W*(j.x+.5), Y=H*(j.y+.5)));
+            P(j.x,j.y), 1)
+        || (U+=.05*x*(n&1)*g, V+=.05*x*(n&2)*g/2)
         e&&e.T(C.shift()|0)
         C.push(x)
     }
