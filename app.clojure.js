@@ -22,8 +22,8 @@ T=function(x,y,z){
             R.indexOf(s)>=0 && j==J && (A++,R.splice(R.indexOf(s), 1)) ||
             // Next point
             P())
-        || (U+=x*(n&1)*g, V+=x*(n&2)*g/2));
-        e&&(e.T(C.shift()||0, p), C.push(x))
+        || (U+=x*(n&1)*g*W/64, V+=x*(n&2)*g/2*H/48));
+        e&&(e.T(C.shift()||0), C.push(x))
     }
     return s
 }
@@ -47,7 +47,7 @@ for(i=0;i<100;i++)
 a.onclick=function(x,y,z){
     O[10*(x.pageX/W|0)+x.pageY/H|0].t = (O[10*(x.pageX/W|0)+x.pageY/H|0].t+1)%4;
 };
-F=Date.now(), V=E=A=I=0;
+F=Date.now(), P=V=E=A=I=0;
 U=function(x,y,z){ x.T(V/20) };
 c.font = "35px Sans";
 (G=function(x,y,z){
@@ -60,11 +60,12 @@ c.font = "35px Sans";
        x!=y && x.t && R.push(T(x,y,1e2*Math.random()%I|0+1)))
     E/4e4>I-3 && 15>I-3 &&
         (x=O[1e2*Math.random()|0], I = x.F = C.push(x));
+    E/1e4>P && (A-=P++)
     c.clearRect(0, 0, a.width, a.height)
     c.fillStyle = "#080"
     c.fillRect(0, 0, a.width, a.height)
     O.forEach(U)
     R.forEach(U)
     c.fillStyle = "#FFF";
-    c.fillText(A, 0, 35);
+    c.fillText(A|0, 0, 35);
 })();
